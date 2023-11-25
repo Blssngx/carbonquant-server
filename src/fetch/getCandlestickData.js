@@ -1,18 +1,12 @@
-const express = require('express');
 const axios = require('axios');
-const pivotCalculations = require('./helpers/pivotFloorCalculations');
-const camarillaCalculations = require('./helpers/camarillaCalculations');
-
-const app = express();
-const port = 3000;
-
-app.use(express.json());
+const pivotCalculations = require('../helpers/pivotFloorCalculations');
+const camarillaCalculations = require('../helpers/camarillaCalculations');
 
 const {
     twoDayVAR,
     twoDayVARString,
     Breakout
-} = require('./helpers/pivotCalculator');
+} = require('../helpers/pivotCalculator');
 
 const {
     ConfluenceSig,
@@ -23,19 +17,7 @@ const {
     tradeParameters,
     TC,
     BC
-} = require('./helpers/signalGenerator')
-
-app.get('/candlesticks', async (req, res) => {
-    try {
-        const pairs = req.query.pairs || 'BTC/USD,ETH/USD'; // Default pairs if not provided
-
-        const candlestickData = await getCandlestickData(pairs);
-        res.json(candlestickData);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-});
+} = require('../helpers/signalGenerator')
 
 async function getCandlestickData(pairs) {
     const today = new Date();
@@ -187,9 +169,4 @@ async function getCandlestickData(pairs) {
     return Promise.all(candlestickDataPromises);
 }
 
-
-
-
-app.listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}`);
-});
+module.exports = getCandlestickData;
