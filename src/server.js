@@ -3,7 +3,7 @@ const getCandlestickData = require('./fetch/getCandlestickData.js');
 const cors = require('cors'); // Add this line
 
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(cors()); // Add this line
@@ -55,7 +55,7 @@ app.get('/signal/:indexToken', async (req, res) => {
 
 app.get('/candlesticks', async (req, res) => {
     try {
-        const pairs = req.query.pairs || 'BTC/USD,ETH/USD,CELO/USD,BTC/ETH,BTC/LTC,BCH/USD,LTC/USD,XRP/USD,ADA/USD,DOGE/USD'; // Default pairs if not provided
+        const pairs = req.query.pairs || 'BTC/LTC,ETH/USD,CELO/USD,BTC/ETH,BCH/USD,LTC/USD,XRP/USD,ADA/USD,DOGE/USD,BTC/USD'; // Default pairs if not provided
         const candlestickData = await getCandlestickData(pairs);
         res.json(candlestickData);
     } catch (error) {
