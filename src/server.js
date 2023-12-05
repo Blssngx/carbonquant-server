@@ -1,5 +1,6 @@
 const express = require('express');
 const getCandlestickData = require('./fetch/getCandlestickData.js');
+const getCurrentPrice = require('./fetch/getCurrentPrice.js');
 const cors = require('cors'); // Add this line
 
 const app = express();
@@ -58,6 +59,17 @@ app.get('/candlesticks', async (req, res) => {
         const pairs = req.query.pairs || 'BTC/LTC,ETH/USD,CELO/USD,BTC/ETH,BCH/USD,LTC/USD,XRP/USD,ADA/USD,DOGE/USD,BTC/USD'; // Default pairs if not provided
         const candlestickData = await getCandlestickData(pairs);
         res.json(candlestickData);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+app.get('/crypto/:symbol', async (req, res) => {
+    try {
+        const {symbol} = req.params;
+        const currentPrice = await getCurrentPrice(symbol);
+        res.json(currentPrice);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
