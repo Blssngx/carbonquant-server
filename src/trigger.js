@@ -2,32 +2,33 @@
 const cron = require('node-cron');
 const getCurrentPrice = require('./fetch/getCurrentPrice');
 const { sendTelegramMessage } = require('./notification/telegram');
+const createPosition = require('./contract/createPosition');
 
 const rules = [
-    {
-        id: 1,
-        name: "BTC-BUY",
-        enabled: true,
-        conditions: {
-            symbols: ["BTC", "LTC"],
-            condition: (prices) => (prices[0] - prices[1]) / 2 > 1000,
-        },
-        action: {
-            id: 1,
-            actionTypes: ["Notification"],
-            orderExecution: "Market order",
-            orderType: "Buy",
-            orderSize: "0.01",
-            message: "Buy 0.01 BTC",
-        }
-    },
+    // {
+    //     id: 1,
+    //     name: "BTC-BUY",
+    //     enabled: true,
+    //     conditions: {
+    //         symbols: ["BTC", "LTC"],
+    //         condition: (prices) => (prices[0] - prices[1]) / 2 < 1000,
+    //     },
+    //     action: {
+    //         id: 1,
+    //         actionTypes: ["Notification"],
+    //         orderExecution: "Market order",
+    //         orderType: "Buy",
+    //         orderSize: "0.01",
+    //         message: "Buy 0.01 BTC",
+    //     }
+    // },
     {
         id: 2,
         name: "LTC-BUY",
         enabled: true,
         conditions: {
             symbols: ["LTC", "ETH"],
-            condition: (prices) => (prices[0] + prices[1]) / 2 < 1000,
+            condition: (prices) => (prices[0] + prices[1]) / 2 > 1000,
         },
         action: {
             id: 2,
@@ -38,23 +39,23 @@ const rules = [
             message: "Buy 0.01 LTC",
         }
     },
-    {
-        id: 3,
-        name: "ETH-BUY",
-        enabled: false,
-        conditions: {
-            symbols: ["ETH"],
-            condition: (prices) => prices[0] > prices[0] + 1,
-        },
-        action: {
-            id: 3,
-            actionTypes: ["Notification"],
-            orderExecution: "Market order",
-            orderType: "Buy",
-            orderSize: "0.01",
-            message: "Buy 0.01 ETH",
-        }
-    },
+    // {
+    //     id: 3,
+    //     name: "ETH-BUY",
+    //     enabled: false,
+    //     conditions: {
+    //         symbols: ["ETH"],
+    //         condition: (prices) => prices[0] > prices[0] + 1,
+    //     },
+    //     action: {
+    //         id: 3,
+    //         actionTypes: ["Notification"],
+    //         orderExecution: "Market order",
+    //         orderType: "Buy",
+    //         orderSize: "0.01",
+    //         message: "Buy 0.01 ETH",
+    //     }
+    // },
 ];
 
 async function price(symbol) {
@@ -83,6 +84,18 @@ function executeAction(rule) {
                 console.log(`${timestamp} - Placing custom order: ${action.message}`);
                 // Add your code for executing a trade based on the custom order parameters
                 // (e.g., using a trading library or API)
+                createPosition(
+                    // process.env.PRIVATE_KEY,
+                    // process.env.CELO_INFURA_URL,
+                    'btc',
+                    // 'cUSD',
+                    true,
+                    '4',
+                    '2',
+                  ).catch((error) => {
+                    console.error(error);
+                    process.exitCode = 1;
+                  });
             }
 
             // Set the state to true to indicate that the action has been executed
