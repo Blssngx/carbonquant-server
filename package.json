@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./src/trigger.js",
+    "start": "nodemon ./src/contract/server.js",
     "cron": "nodemon ./src/testcron.js"
   },
   "keywords": [],
@@ -17,6 +17,7 @@
     "file-system": "^2.2.2",
     "node-cron": "^3.0.3",
     "node-telegram-bot-api": "^0.64.0",
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "web3": "^1.6.1"
   }
 }
