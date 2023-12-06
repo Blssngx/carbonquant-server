@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./src/trigger.js",
+    "start": "nodemon ./src/server.js",
     "cron": "nodemon ./src/testcron.js",
     "trade": "nodemon ./src/contract/trade.js",
     "test": "nodemon ./test.js"
@@ -20,9 +20,11 @@
     "ethers": "^6.9.0",
     "express": "^4.18.2",
     "file-system": "^2.2.2",
+    "http": "^0.0.1-security",
     "node-cron": "^3.0.3",
     "node-telegram-bot-api": "^0.64.0",
     "nodemon": "^3.0.1",
+    "socket.io": "^4.7.2",
     "web3": "^1.6.1"
   }
 }

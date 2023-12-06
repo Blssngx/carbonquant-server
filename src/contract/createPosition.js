@@ -35,14 +35,14 @@ async function createPosition(
 
   const executionFee = await positionRouter.minExecutionFee();
   const indexToken = getHash(baseSymbol);
-//   const collateral = getHash(quoteSymbol);
 
   try {
     const maxPrice = await vault.getMaxPrice(indexToken);
     console.log("maxPrice: ", maxPrice.toString());
     const acceptablePrice = maxPrice;
     const collateral = "0x765DE816845861e75A25fCA122bb6898B8B1282a";;
-    const isLong = side;
+    const isLong = side === 'BUY';
+    console.log("isLong: ", isLong);
     const amountIn = BigInt(stake) * BigInt('1000000000000000000');
     const sizeDelta = BigInt(stake) * BigInt(leverage) * (BigInt('1000000000000') * BigInt('1000000000000000000')); // USD value of position with the leverage
     const minOut = 0;

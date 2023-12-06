@@ -77,25 +77,21 @@ function executeAction(rule) {
                 console.log(`${timestamp} - Sending notification: ${action.message}`);
                 // Add your code for sending notifications (e.g., via Telegram)
                 // Send the message to Telegram using the function from the 'telegram' module
-                sendTelegramMessage("6920662344:AAF8Z_3OiMqMyfbui7qZHAIEKjygsf46aOE","916045875", action.message);
+                sendTelegramMessage("6920662344:AAF8Z_3OiMqMyfbui7qZHAIEKjygsf46aOE", "916045875", action.message);
             }
 
             if (action.actionTypes.includes("Place Custom Order")) {
                 console.log(`${timestamp} - Placing custom order: ${action.message}`);
                 // Add your code for executing a trade based on the custom order parameters
-                // (e.g., using a trading library or API)
                 createPosition(
-                    // process.env.PRIVATE_KEY,
-                    // process.env.CELO_INFURA_URL,
                     'btc',
-                    // 'cUSD',
-                    true,
+                    'BUY',
                     '4',
                     '2',
-                  ).catch((error) => {
+                ).catch((error) => {
                     console.error(error);
                     process.exitCode = 1;
-                  });
+                });
             }
 
             // Set the state to true to indicate that the action has been executed
