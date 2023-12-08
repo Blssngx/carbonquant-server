@@ -39,23 +39,23 @@ const rules = [
             message: "Buy 0.01 LTC",
         }
     },
-    // {
-    //     id: 3,
-    //     name: "ETH-BUY",
-    //     enabled: false,
-    //     conditions: {
-    //         symbols: ["ETH"],
-    //         condition: (prices) => prices[0] > prices[0] + 1,
-    //     },
-    //     action: {
-    //         id: 3,
-    //         actionTypes: ["Notification"],
-    //         orderExecution: "Market order",
-    //         orderType: "Buy",
-    //         orderSize: "0.01",
-    //         message: "Buy 0.01 ETH",
-    //     }
-    // },
+    {
+        id: 3,
+        name: "ETH-BUY",
+        enabled: false,
+        conditions: {
+            symbols: ["ETH"],
+            condition: (prices) => prices[0] > prices[0] + 1,
+        },
+        action: {
+            id: 3,
+            actionTypes: ["Notification"],
+            orderExecution: "Market order",
+            orderType: "Buy",
+            orderSize: "0.01",
+            message: "Buy 0.01 ETH",
+        }
+    },
 ];
 
 async function price(symbol) {

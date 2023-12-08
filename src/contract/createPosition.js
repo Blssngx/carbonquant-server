@@ -6,10 +6,7 @@ const getHash = require('./getHash');
 const isBuyAction = require('./isBuyAction');
 
 async function createPosition(
-//   privateKey,
-//   nodeUrl,
   baseSymbol,
-//   quoteSymbol,
   side,
   stake,
   leverage,
