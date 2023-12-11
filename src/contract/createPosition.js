@@ -2,8 +2,7 @@
 const { ethers } = require('ethers');
 const POSITION_ROUTER = require('./abi/IPositionRouter');
 const VAULT = require('./abi/IVault');
-const getHash = require('./getHash');
-const isBuyAction = require('./isBuyAction');
+const getHash = require('./helper/getHash');
 
 async function createPosition(
   baseSymbol,
@@ -11,11 +10,11 @@ async function createPosition(
   stake,
   leverage,
 ) {
-//   const provider = new ethers.JsonRpcProvider(nodeUrl); // Replace with your Celo node URL
-//   const wallet = new ethers.Wallet(privateKey, provider);
+  const privateKey = process.env.PRIVATE_KEY;
+  const infuraKey = process.env.INFURA_KEY;
 
-  const provider = new ethers.JsonRpcProvider('https://celo-mainnet.infura.io/v3/8f43ca69ad8f44218d6873f2f70bb8a2'); // Replace with your Celo node URL
-  const wallet = new ethers.Wallet('ad6d49fae8bd723bdbf479dae8b9d488795a916a65e56ef2cabbb29f13f89d59', provider); // Replace with your private key
+  const provider = new ethers.JsonRpcProvider(`https://celo-mainnet.infura.io/v3/${infuraKey}`); // Replace with your Celo node URL
+  const wallet = new ethers.Wallet(`${privateKey}`, provider); // Replace with your private key
 
 
   const positionRouter = new ethers.Contract(

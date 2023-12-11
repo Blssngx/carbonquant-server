@@ -77,44 +77,71 @@ app.post('/update-rules', (req, res) => {
   rules.push(receivedRules);
   // Emit the updated rules to all connected clients
   io.emit('updateRules', rules);
+  // Update your rules or handle the incoming rules as needed
+  // console.log('Updated rules:', rules);
 
   res.status(200).json({ message: 'Rules received and loaded successfully.' });
 });
 
+// function executeAction(rule) {
+//   if (!ruleState[rule.name]) {
+//     const { actionTypes, baseSymbol, market, leverage, stake, message } = rule;
+//     const timestamp = new Date().toUTCString();
+
+//     console.log(`${timestamp} - Executing action for rule: ${rule.name}`);
+
+//     if (actionTypes.includes('Notification')) {
+//       console.log(`${timestamp} - Sending notification: ${message}`);
+//       sendTelegramMessage(
+//         `${process.env.TELEGRAM_BOT_TOKEN}`,
+//         `${process.env.TELEGRAM_CHAT_ID}`,
+//         message
+//       );
+//     }
+
+//     if (actionTypes.includes('Place Custom Order')) {
+//       console.log(`${timestamp} - Placing custom order: ${message}`);
+//       createPosition(baseSymbol, market, stake, leverage).catch((error) => {
+//         console.error(error);
+//         process.exitCode = 1;
+//       });
+//     }
+
+//     ruleState[rule.name] = true;
+//   } else {
+//     const timestamp = new Date().toUTCString();
+//     console.log(`${timestamp} - Action for rule ${rule.name} already executed. Skipping.`);
+//   }
+// }
+
 function executeAction(rule) {
-  if (!ruleState[rule.name]) {
-    const { actionTypes, baseSymbol, market, leverage, stake, message } = rule;
-    const timestamp = new Date().toUTCString();
+  if (!ruleState[rule.id]) {
+      const { action } = rule;
+      const timestamp = new Date().toUTCString(); // Get current timestamp in ISO format
 
-    console.log(`${timestamp} - Executing action for rule: ${rule.name}`);
+      if (action) {
+          console.log(`${timestamp} - Executing action for rule: ${name}`);
 
-    if (actionTypes.includes('Notification')) {
-      // Check if Telegram parameters are present
-      if (!process.env.TELEGRAM_BOT_TOKEN || !process.env.TELEGRAM_CHAT_ID || !process.env.TELEGRAM_BOT_TOKEN == "" || !process.env.TELEGRAM_CHAT_ID == "") {
-        console.error('Telegram parameters are missing. Cannot send notification.');
+          if (actionTypes.includes("Notification")) {
+              console.log(`${timestamp} - Sending notification: ${message}`);
+              // https://api.telegram.org/bot6920662344:AAF8Z_3OiMqMyfbui7qZHAIEKjygsf46aOE/getUpdates
+              sendTelegramMessage("6920662344:AAF8Z_3OiMqMyfbui7qZHAIEKjygsf46aOE","916045875", action.message);
+          }
+
+          if (actionTypes.includes("Place Custom Order")) {
+              console.log(`${timestamp} - Placing custom order: ${message}`);
+              // Add your code for executing a trade based on the custom order parameters
+              // (e.g., using a trading library or API)
+          }
+
+          // Set the state to true to indicate that the action has been executed
+          ruleState[id] = true;
       } else {
-        console.log(`${timestamp} - Sending notification: ${message}`);
-        sendTelegramMessage(
-          `${process.env.TELEGRAM_BOT_TOKEN}`,
-          `${process.env.TELEGRAM_CHAT_ID}`,
-          message
-        );
+          console.log(`${timestamp} - No matching action found for rule: ${rule.name}`);
       }
-    }
-    
-
-    if (actionTypes.includes('Place Custom Order')) {
-      console.log(`${timestamp} - Placing custom order: ${message}`);
-      createPosition(baseSymbol, market, stake, leverage).catch((error) => {
-        console.error(error);
-        process.exitCode = 1;
-      });
-    }
-
-    ruleState[rule.name] = true;
   } else {
-    const timestamp = new Date().toUTCString();
-    console.log(`${timestamp} - Action for rule ${rule.name} already executed. Skipping.`);
+      const timestamp = new Date().toUTCString(); // Get current timestamp in ISO format
+      console.log(`${timestamp} - Action for rule ${rule.name} already executed. Skipping.`);
   }
 }
 
@@ -167,6 +194,7 @@ io.on('connection', (socket) => {
 
 async function price(symbol) {
   const currentPrice = await getCurrentPrice(symbol);
+  // console.log("currentPrice: ", currentPrice);
   return currentPrice;
 }
 

@@ -1,4 +1,3 @@
-
 // The addresses of the smart contracts
 const CONTRACT_ADDRESS = "0x86869a5328eCb98b938A71AaC450eABC5E06b242";
 
