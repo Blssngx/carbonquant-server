@@ -7,6 +7,7 @@ const getCurrentPrice = require('./fetch/getCurrentPrice');
 const { sendTelegramMessage } = require('./notification/telegram');
 const createPosition = require('./contract/createPosition');
 const bodyParser = require('body-parser');
+const e = require('express');
 require('dotenv').config()
 
 const app = express();
@@ -101,7 +102,7 @@ function executeAction(rule) {
         );
       }
     }
-    
+
 
     if (actionTypes.includes('Place Custom Order')) {
       console.log(`${timestamp} - Placing custom order: ${message}`);
@@ -127,16 +128,17 @@ cron.schedule('*/15 * * * * *', async () => {
         console.log(`${timestamp} - Condition for ${rule.symbols.join(', ')} is disabled`);
         continue;
       }
-
+      
       const prices = await Promise.all(rule.symbols.map(symbol => price(symbol)));
+      console.log(`${timestamp} - Prices for ${rule.symbols.join(', ')}: ${prices.join(', ')}`);
       const conditionResult = evaluateCondition(rule.condition, prices);
       console.log(`${timestamp} - Rule: ${rule.name} is ${conditionResult}`);
-
+      console.log(`Rule: ${rule.name} is ${conditionResult}`);
       if (evaluateCondition(rule.condition, prices)) {
-          executeAction(rule);
+        executeAction(rule);
       } else {
-          // Reset the state if the condition is not true
-          ruleState[rule.id] = false;
+        // Reset the state if the condition is not true
+        ruleState[rule.id] = false;
       }
     }
   } catch (error) {
@@ -147,6 +149,7 @@ cron.schedule('*/15 * * * * *', async () => {
 // Function to evaluate the condition string
 const evaluateCondition = (condition, prices) => {
   const sanitizedCondition = condition.replace(/prices\[(\d+)\]/g, (_, index) => prices[parseInt(index, 10)]);
+  console.log(`Sanitized Condition: ${sanitizedCondition}`);
   return eval(sanitizedCondition);
 };
 
